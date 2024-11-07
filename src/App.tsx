@@ -1,11 +1,19 @@
 import { generateMnemonic, mnemonicToSeedSync } from "bip39";
 import { derivePath } from "ed25519-hd-key";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import nacl from "tweetnacl";
 import { Keypair } from "@solana/web3.js";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
-  const [mnemonic, setMnenomic] = useState("");
+  const navigation = useNavigate();
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const name = e.currentTarget.name;
+    const url = `/generate/${name}`;
+    navigation(url);
+  };
 
   useEffect(() => {
     const mnemonic = generateMnemonic();
@@ -22,7 +30,34 @@ function Home() {
     console.log(privateKey, publicKey);
   }, []);
 
-  return <div>SUp hLeppo</div>;
+  return (
+    <div className="p-12">
+      <h1 className="text-3xl text-white font-bold">
+        W-Wallet supports multiple blockchains
+      </h1>
+      <h3 className="text-white opacity-70">
+        Choose a blockchain to get started.
+      </h3>
+      <div className="mt-10">
+        <Button
+          className="mr-5 w-32"
+          variant="secondary"
+          name="sol"
+          onClick={handleClick}
+        >
+          Solana
+        </Button>
+        <Button
+          className="w-32"
+          variant="secondary"
+          name="eth"
+          onClick={handleClick}
+        >
+          Ethereum
+        </Button>
+      </div>
+    </div>
+  );
 }
 
 export default Home;
